@@ -8,14 +8,14 @@ pub fn get_lmk_epoch() -> SystemTime {
     UNIX_EPOCH + Duration::from_secs(LMK_EPOCH_OFFSET)
 }
 
-/// Generate a LMK epoch based timestamp in millis
+/// Generate a LMK epoch based timestamp in secs
 ///
 /// Might be problematic, but if duration is before LMK EPOCH it will result in the function returning 0.
-pub fn generate_now() -> u128 {
+pub fn generate_now() -> u64 {
     let lmk_epoch = get_lmk_epoch();
 
     SystemTime::now()
         .duration_since(lmk_epoch)
         .unwrap_or(Duration::from_secs(0))
-        .as_millis()
+        .as_secs()
 }

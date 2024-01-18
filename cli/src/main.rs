@@ -10,6 +10,8 @@ fn main() {
         return;
     }
 
+    let backend_url = option_env!("LMK_BACKEND_URL").unwrap_or("https://localhost");
+
     println!(
         "Hello, world! Sending '{}' with summary '{}'",
         args[1],
