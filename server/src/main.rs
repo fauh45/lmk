@@ -13,7 +13,8 @@ impl common::event_capnp::event_interface::Server for Main {
         let req = pry!(pry!(params.get()).get_event());
 
         let identifier = pry!(pry!(req.get_identifier()).to_str());
-        let secret_code = req.get_secret_code();
+        let timestamp = req.get_timestamp();
+        let message = req.get_message();
 
         // TODO: Handle when being called
 
