@@ -6,11 +6,11 @@ use futures::AsyncReadExt;
 
 const VERSION: Option<&str> = option_env!("CARGO_PKG_VERSION");
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();
     let backend_url = option_env!("LMK_BACKEND_URL")
-        .unwrap_or("https://localhost:6969")
+        .unwrap_or("localhost:6969")
         .to_socket_addrs()?
         .next()
         .expect("Backend URL is not valid!");
@@ -23,10 +23,11 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     println!(
-        "Hello, world! Sending '{}' to id '{}' with summary '{}'",
+        "Sending '{}' to id '{}' with summary '{}' to backend at {}",
         args[2],
         args[1],
-        args.get(3).unwrap_or(&"No summary :(".into())
+        args.get(3).unwrap_or(&"No summary :(".into()),
+        backend_url
     );
 
     tokio::task::LocalSet::new()
