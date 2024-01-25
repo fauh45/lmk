@@ -170,18 +170,22 @@ pub mod event_interface {
         !self.reader.get_pointer_field(0).is_null()
       }
       #[inline]
-      pub fn get_secret_code(self) -> u16 {
-        self.reader.get_data_field::<u16>(0)
+      pub fn get_timestamp(self) -> u64 {
+        self.reader.get_data_field::<u64>(0)
       }
       #[inline]
-      pub fn get_timestamp(self) -> u64 {
-        self.reader.get_data_field::<u64>(1)
+      pub fn get_message(self) -> ::capnp::Result<crate::event_capnp::event_interface::event::message::Reader<'a>> {
+        ::capnp::traits::FromPointerReader::get_from_pointer(&self.reader.get_pointer_field(1), ::core::option::Option::None)
+      }
+      #[inline]
+      pub fn has_message(&self) -> bool {
+        !self.reader.get_pointer_field(1).is_null()
       }
     }
 
     pub struct Builder<'a> { builder: ::capnp::private::layout::StructBuilder<'a> }
     impl <'a,> ::capnp::traits::HasStructSize for Builder<'a,>  {
-      const STRUCT_SIZE: ::capnp::private::layout::StructSize = ::capnp::private::layout::StructSize { data: 2, pointers: 1 };
+      const STRUCT_SIZE: ::capnp::private::layout::StructSize = ::capnp::private::layout::StructSize { data: 1, pointers: 2 };
     }
     impl <'a,> ::capnp::traits::HasTypeId for Builder<'a,>  {
       const TYPE_ID: u64 = _private::TYPE_ID;
@@ -248,20 +252,28 @@ pub mod event_interface {
         !self.builder.is_pointer_field_null(0)
       }
       #[inline]
-      pub fn get_secret_code(self) -> u16 {
-        self.builder.get_data_field::<u16>(0)
-      }
-      #[inline]
-      pub fn set_secret_code(&mut self, value: u16)  {
-        self.builder.set_data_field::<u16>(0, value);
-      }
-      #[inline]
       pub fn get_timestamp(self) -> u64 {
-        self.builder.get_data_field::<u64>(1)
+        self.builder.get_data_field::<u64>(0)
       }
       #[inline]
       pub fn set_timestamp(&mut self, value: u64)  {
-        self.builder.set_data_field::<u64>(1, value);
+        self.builder.set_data_field::<u64>(0, value);
+      }
+      #[inline]
+      pub fn get_message(self) -> ::capnp::Result<crate::event_capnp::event_interface::event::message::Builder<'a>> {
+        ::capnp::traits::FromPointerBuilder::get_from_pointer(self.builder.get_pointer_field(1), ::core::option::Option::None)
+      }
+      #[inline]
+      pub fn set_message(&mut self, value: crate::event_capnp::event_interface::event::message::Reader<'_>) -> ::capnp::Result<()> {
+        ::capnp::traits::SetterInput::set_pointer_builder(self.builder.reborrow().get_pointer_field(1), value, false)
+      }
+      #[inline]
+      pub fn init_message(self, ) -> crate::event_capnp::event_interface::event::message::Builder<'a> {
+        ::capnp::traits::FromPointerBuilder::init_pointer(self.builder.get_pointer_field(1), 0)
+      }
+      #[inline]
+      pub fn has_message(&self) -> bool {
+        !self.builder.is_pointer_field_null(1)
       }
     }
 
@@ -272,14 +284,17 @@ pub mod event_interface {
       }
     }
     impl Pipeline  {
+      pub fn get_message(&self) -> crate::event_capnp::event_interface::event::message::Pipeline {
+        ::capnp::capability::FromTypelessPipeline::new(self._typeless.get_pointer_field(1))
+      }
     }
     mod _private {
-      pub static ENCODED_NODE: [::capnp::Word; 70] = [
+      pub static ENCODED_NODE: [::capnp::Word; 69] = [
         ::capnp::word(0, 0, 0, 0, 5, 0, 6, 0),
         ::capnp::word(168, 150, 253, 226, 171, 8, 182, 197),
-        ::capnp::word(27, 0, 0, 0, 1, 0, 2, 0),
+        ::capnp::word(27, 0, 0, 0, 1, 0, 1, 0),
         ::capnp::word(0, 118, 130, 125, 165, 240, 137, 220),
-        ::capnp::word(1, 0, 7, 0, 0, 0, 0, 0),
+        ::capnp::word(2, 0, 7, 0, 0, 0, 0, 0),
         ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
         ::capnp::word(21, 0, 0, 0, 10, 1, 0, 0),
         ::capnp::word(37, 0, 0, 0, 23, 0, 0, 0),
@@ -307,17 +322,17 @@ pub mod event_interface {
         ::capnp::word(1, 0, 0, 0, 0, 0, 0, 0),
         ::capnp::word(0, 0, 1, 0, 1, 0, 0, 0),
         ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(77, 0, 0, 0, 90, 0, 0, 0),
+        ::capnp::word(77, 0, 0, 0, 82, 0, 0, 0),
         ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
         ::capnp::word(76, 0, 0, 0, 3, 0, 1, 0),
         ::capnp::word(88, 0, 0, 0, 2, 0, 1, 0),
         ::capnp::word(2, 0, 0, 0, 1, 0, 0, 0),
         ::capnp::word(0, 0, 1, 0, 2, 0, 0, 0),
         ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(85, 0, 0, 0, 82, 0, 0, 0),
+        ::capnp::word(85, 0, 0, 0, 66, 0, 0, 0),
         ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(84, 0, 0, 0, 3, 0, 1, 0),
-        ::capnp::word(96, 0, 0, 0, 2, 0, 1, 0),
+        ::capnp::word(80, 0, 0, 0, 3, 0, 1, 0),
+        ::capnp::word(92, 0, 0, 0, 2, 0, 1, 0),
         ::capnp::word(105, 100, 101, 110, 116, 105, 102, 105),
         ::capnp::word(101, 114, 0, 0, 0, 0, 0, 0),
         ::capnp::word(12, 0, 0, 0, 0, 0, 0, 0),
@@ -325,15 +340,6 @@ pub mod event_interface {
         ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
         ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
         ::capnp::word(12, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(115, 101, 99, 114, 101, 116, 67, 111),
-        ::capnp::word(100, 101, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(7, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
-        ::capnp::word(7, 0, 0, 0, 0, 0, 0, 0),
         ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
         ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
         ::capnp::word(116, 105, 109, 101, 115, 116, 97, 109),
@@ -345,12 +351,20 @@ pub mod event_interface {
         ::capnp::word(9, 0, 0, 0, 0, 0, 0, 0),
         ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
         ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
+        ::capnp::word(109, 101, 115, 115, 97, 103, 101, 0),
+        ::capnp::word(16, 0, 0, 0, 0, 0, 0, 0),
+        ::capnp::word(233, 108, 57, 143, 114, 40, 162, 133),
+        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
+        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
+        ::capnp::word(16, 0, 0, 0, 0, 0, 0, 0),
+        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
+        ::capnp::word(0, 0, 0, 0, 0, 0, 0, 0),
       ];
       pub fn get_field_types(index: u16) -> ::capnp::introspect::Type {
         match index {
           0 => <::capnp::text::Owned as ::capnp::introspect::Introspect>::introspect(),
-          1 => <u16 as ::capnp::introspect::Introspect>::introspect(),
-          2 => <u64 as ::capnp::introspect::Introspect>::introspect(),
+          1 => <u64 as ::capnp::introspect::Introspect>::introspect(),
+          2 => <crate::event_capnp::event_interface::event::message::Owned as ::capnp::introspect::Introspect>::introspect(),
           _ => panic!("invalid field index {}", index),
         }
       }
@@ -365,7 +379,7 @@ pub mod event_interface {
       };
       pub static NONUNION_MEMBERS : &[u16] = &[0,1,2];
       pub static MEMBERS_BY_DISCRIMINANT : &[u16] = &[];
-      pub static MEMBERS_BY_NAME : &[u16] = &[0,1,2];
+      pub static MEMBERS_BY_NAME : &[u16] = &[0,2,1];
       pub const TYPE_ID: u64 = 0xc5b6_08ab_e2fd_96a8;
     }
 
