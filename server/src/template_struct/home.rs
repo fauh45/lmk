@@ -1,5 +1,5 @@
-use askama::Template;
+use askama_actix::Template;
 
 #[derive(Template)]
-#[template(path = "home.j2")]
+#[template(path = "home.html")]
 pub struct HomeTemplate;
