@@ -1,5 +1,6 @@
 use capnp::capability::Promise;
 use capnp_rpc::pry;
+use log::debug;
 
 pub struct EventRPCImpl;
 
@@ -18,12 +19,10 @@ impl common::event_capnp::event_interface::Server for EventRPCImpl {
         let message_summary = pry!(pry!(message.get_summary()).to_str());
         let message_body = pry!(pry!(message.get_body()).to_str());
 
-        println!("---");
-        println!(
+        debug!(target: "rpc_server",
             "Id: {}\nTimestamp: {}\nMessage:\n\tSummary: {}\n\tBody: {}",
             identifier, timestamp, message_summary, message_body
         );
-        println!("---");
 
         // TODO: Handle when being called
 

@@ -1,11 +1,13 @@
 use std::{net::ToSocketAddrs, process::exit};
 use tokio::signal::ctrl_c;
 
-use actix_web::{App, HttpServer};
+use actix_web::{middleware, App, HttpServer};
 use capnp_rpc::{rpc_twoparty_capnp, twoparty, RpcSystem};
 use common::event_capnp::event_interface;
+use dotenv::dotenv;
 use futures::AsyncReadExt;
 use http_handler::home::home;
+use log::{debug, error, info};
 use tokio_util::sync::CancellationToken;
 
 mod http_handler;
@@ -17,6 +19,9 @@ const HTTP_HOST: Option<&str> = option_env!("HTTP_HOST");
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
+    dotenv().ok();
+    env_logger::init();
+
     // Create an Arc to share shutdown signals between tasks
     let shutdown_signal = CancellationToken::new();
     let listen_shutdown_signal = shutdown_signal.clone();
@@ -28,7 +33,7 @@ async fn main() -> Result<(), std::io::Error> {
                 shutdown_signal.cancel();
             }
             Err(err) => {
-                eprintln!("Unable to listen for shutdown signal: {}", err);
+                error!("Unable to listen for shutdown signal: {}", err);
 
                 exit(1);
             }
@@ -43,9 +48,10 @@ async fn main() -> Result<(), std::io::Error> {
         .next()
         .expect("HTTP_HOST should be a valid address");
 
-    let http_server = HttpServer::new(|| App::new().service(home))
-        .bind(http_listen_address)?
-        .run();
+    let http_server =
+        HttpServer::new(|| App::new().wrap(middleware::Logger::default()).service(home))
+            .bind(http_listen_address)?
+            .run();
 
     // Spawn HTTP server on the default runtime
     tokio::spawn(http_server);
@@ -60,13 +66,18 @@ async fn main() -> Result<(), std::io::Error> {
     let event_rpc: event_interface::Client =
         capnp_rpc::new_client(crate::rpc_impl::event_rpc::EventRPCImpl);
 
-    println!("RPC server now listening at {}", rpc_listen_address);
+    info!(
+        target: "rpc_server",
+        "RPC server now listening at {}", rpc_listen_address
+    );
 
     tokio::task::LocalSet::new()
         .run_until(async move {
             loop {
                 tokio::select! {
                     _ = listen_shutdown_signal.cancelled() => {
+                        debug!(target: "rpc_server", "RPC server got signal to shut down");
+
                         break;
                     }
                     listen_result = listener.accept() => {
@@ -85,7 +96,7 @@ async fn main() -> Result<(), std::io::Error> {
                                 tokio::task::spawn_local(rpc_system);
                             }
                             Err(err) => {
-                                eprintln!("Error while opening listen on RPC server: {}", err);
+                                error!(target: "rpc_server", "Error while opening listen on RPC server: {}", err);
 
                                 exit(1);
                             }
@@ -96,7 +107,7 @@ async fn main() -> Result<(), std::io::Error> {
         })
         .await;
 
-    println!("Shutting down gracefully...");
+    info!("Shutting down gracefully...");
 
     Ok(())
 }
