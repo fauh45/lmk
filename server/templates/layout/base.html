@@ -4,13 +4,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/chota@0.9.2/dist/chota.min.css"
+        integrity="sha384-A2UBIkgVTcNWgv+snhw7PKvU/L9N0JqHwgwDwyNcbsLiVhGG5KAuR64N4wuDYd99" crossorigin="anonymous">
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+        integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+        crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --font-family-sans: "Plus Jakarta Sans", sans-serif;
+        }
+    </style>
+
     <title>{% block title %}{{ title }}{% endblock %}</title>
 
     {% block head %}{% endblock %}
 </head>
 
 <body>
-    {% block content %}{% endblock %}
+
+    <div class="container" role="document">
+        <header role="banner">
+            <h1 style="margin-bottom: .1em;">LetMeKnow</h1>
+            <p>Your trusty notifier made by <a href="https://x.com/fauh45">fauh45</a></p>
+        </header>
+
+        <main role="main">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 </body>
+
+<style>
+    body.dark {
+        --bg-color: #000;
+        --bg-secondary-color: #131316;
+        --font-color: #f5f5f5;
+        --color-grey: #ccc;
+        --color-darkGrey: #777;
+    }
+</style>
+<script>
+    if (window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
 
 </html>
