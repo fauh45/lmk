@@ -1,0 +1,35 @@
+{% extends "layout/base.html" %}
+
+{% block title %}LMK | Listening to "{{ identifier }}"{% endblock title %}
+
+{% block content %}
+<h2>Events</h2>
+<p>You're currently listening to events on identifier <b>"{{ identifier }}"</b>, any events sent to this identifier will
+    show up here.</p>
+
+<h3>Setup</h3>
+<p>If you're just getting started, here's the way to send in your events using LMK cli.</p>
+
+<code>lmk "{{ identifier }}" "Summary of your event" "Description of what happend in the event"</code>
+
+<p>p.s. description part of the CLI is optional, the only part you need to put in is the identifier and summary.</p>
+
+<h3>List of Events</h3>
+<p>Events <b>are not stored</b> (it will be added later) by the server. So this list will only consist of events sent
+    while you're opening this website.</p>
+
+<table class="striped">
+    <caption>Received Events</caption>
+    <thead>
+        <tr>
+            <th>Timestamp</th>
+            <th>Summary</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody id="event-tbody">
+        {# This part will be streamed through SSE and appended by HTMX #}
+    </tbody>
+</table>
+
+{% endblock content %}

@@ -6,9 +6,10 @@ use capnp_rpc::{rpc_twoparty_capnp, twoparty, RpcSystem};
 use common::event_capnp::event_interface;
 use dotenv::dotenv;
 use futures::AsyncReadExt;
-use http_handler::home::home;
 use log::{debug, error, info};
 use tokio_util::sync::CancellationToken;
+
+use crate::http_handler::{event_handler, home_handler};
 
 mod http_handler;
 mod rpc_impl;
@@ -48,10 +49,14 @@ async fn main() -> Result<(), std::io::Error> {
         .next()
         .expect("HTTP_HOST should be a valid address");
 
-    let http_server =
-        HttpServer::new(|| App::new().wrap(middleware::Logger::default()).service(home))
-            .bind(http_listen_address)?
-            .run();
+    let http_server = HttpServer::new(|| {
+        App::new()
+            .wrap(middleware::Logger::default())
+            .service(home_handler::index)
+            .service(event_handler::events)
+    })
+    .bind(http_listen_address)?
+    .run();
 
     // Spawn HTTP server on the default runtime
     tokio::spawn(http_server);
